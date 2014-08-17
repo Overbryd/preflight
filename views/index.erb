@@ -1,0 +1,5 @@
+<table>
+  <% @checklists.each do |checklist| %>
+    <tr><td><a href="/checklists/<%= checklist.id %>/edit"><%= checklist.name %></a></td></tr>
+  <% end %>
+</table>

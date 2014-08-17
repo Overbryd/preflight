@@ -1,0 +1,18 @@
+<div data-section="checklist">
+
+  <form data-target="checklist" data-action="update">
+    <h3><input autosize name="checklist[name]" type="text" value="<%= @checklist.name %>" /></h3>
+  </form>
+
+  <% @checklist.steps.each_with_index do |step, index| %>
+    <%= partial :"checklist/edit_step", index: index, step: step %>
+  <% end %>
+  <div>
+    <form data-target="checklist" data-action="steps/create">
+      <input type="checkbox" disabled />
+      <input autosize name="step" type="text" />
+    </form>
+  </div>
+
+</div>
+

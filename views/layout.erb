@@ -1,0 +1,65 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+  $(function() {
+    $(document).delegate("form", "submit", function(event) {
+      event.preventDefault();
+      var $this = $(this)
+      var target = $this.data("target");
+      $.post($this.data("action"), $this.serialize(), function(html) {
+        $("*[data-section='" + target + "']").replaceWith(html);
+        refresh();
+      });
+    });
+
+    $(document).delegate("form[autosave] :input", "change", function(event) {
+      var $this = $(this);
+      var timer = $this.data("autosaving");
+      clearTimeout(timer);
+      var timer = setTimeout(function() {
+        $this.trigger("submit");
+      }, 250);
+      $this.data("autosaving", timer);
+    });
+
+    $(document).delegate("input[autosize]", "keydown keyup input propertychange change", function(event) {
+      var $this = $(this);
+      var mirror = $("<span style='position:absolute; top:-999px; left:0; white-space:pre;'/>");
+      $.each(["fontFamily", "fontSize", "fontWeight", "fontStyle", "letterSpacing", "textTransform", "wordSpacing", "textIndent"], function (i, val) {
+          mirror.get(0).style[val] = $this.css(val);
+      });
+      $("body").append(mirror);
+      mirror.text($this.val());
+      $this.width(mirror.width());
+      mirror.remove();
+    });
+
+    function refresh() {
+      $("input[autosize]").trigger("input");
+    };
+    refresh();
+  });
+</script>
+<style>
+  input[autosize] {
+    min-width: 160px;
+  }
+  input[type=text] {
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    border: none;
+    outline: none;
+    padding: 1px;
+    overflow: visible;
+  }
+  input[type=text]:hover {
+    border: 1px solid #ddd;
+    padding: 0;
+  }
+  input[type=text]:focus {
+    border: 1px solid black;
+    padding: 0;
+  }
+</style>
+<%= yield %>
